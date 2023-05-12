@@ -30,6 +30,8 @@ namespace SG {
         [SerializeField]
         float rotationSpeed = 10;
 
+        public float gravity = 2.0f*9.81f;
+
         void Start()
         {
             rigidbody = GetComponent<Rigidbody>();
@@ -76,6 +78,9 @@ namespace SG {
 
         public void HandleMovement(float delta) {
 
+            if (!animationHandler.anim.GetBool("isinteracting")) rigidbody.AddForce(Vector3.down * gravity * rigidbody.mass);
+
+
             moveDirection = cameraObject.forward * inputHandler.vertical;
             moveDirection += cameraObject.right * inputHandler.horizontal;
             moveDirection.Normalize();
@@ -85,10 +90,11 @@ namespace SG {
             moveDirection *= speed;
 
             normalVector = Vector3.up;
-            Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
-            // just changing the velocity here, a decaying acceleration should be more appropriate
 
-            rigidbody.velocity = projectedVelocity;
+            rigidbody.velocity = moveDirection; // projectedVelocity;
+            
+
+           
 
             animationHandler.UpdateAnimatorValues(inputHandler.moveAmount, 0);
 
@@ -103,8 +109,10 @@ namespace SG {
         {
             float delta = Time.deltaTime;
             inputHandler.TickInput(delta);
+            
             HandleMovement(delta);
             HandleRolling(delta);
+            
         }
 
         // in the tutorial this method is called HandleRollingAndSprinting,
@@ -123,7 +131,6 @@ namespace SG {
                 {
                     
                     animationHandler.PlayTargetAnimation("roll_forward", true);
-
                     moveDirection.y = 0;
                     Quaternion rollRotation = Quaternion.LookRotation(moveDirection);
                     myTransform.rotation = rollRotation;

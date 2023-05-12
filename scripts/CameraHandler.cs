@@ -17,7 +17,7 @@ namespace SG {
         //public Transform playerToGazeAt;
 
         public float maxDistance = 10f;
-        public float scalingFactor = 80f;
+        public float normalizationFactor = 80f;
 
         private Transform myTransform;
         private Vector3 cameraTransformPosition;
@@ -35,8 +35,8 @@ namespace SG {
         private float defaultPosition;
         private float lookAngle;
         private float pivotAngle;
-        public float minimumPivot = -35;
-        public float maximumPivot = 35;
+        public float minimumPivot = -20;
+        public float maximumPivot = 20;
 
         public float cameraShpereRadius = 0.2f;
         public float cameraCollisionOffset = 0.2f;
@@ -85,8 +85,8 @@ namespace SG {
                 try 
                 {
                     thisPlayerTransform = this.transform.parent.transform.Find("Player");
-                    fistPlayerTransform = GameObject.Find("player_holder").transform.Find("Player");
-                    secondPlayerTransform = GameObject.Find("player_holder(Clone)").transform.Find("Player");
+                    fistPlayerTransform = GameObject.Find("player 1").transform.Find("Player");
+                    secondPlayerTransform = GameObject.Find("player 2").transform.Find("Player");
 
                     if (thisPlayerTransform.Equals(fistPlayerTransform))
                     {
@@ -107,9 +107,13 @@ namespace SG {
 
                 float targetsDistance = Vector3.Distance(targetToGazeAt.position, targetTransform.position);
 
-                pivotAngle = (1 / (targetsDistance + float.Epsilon)) * scalingFactor;
-                
+                pivotAngle = (1 / ((targetsDistance / normalizationFactor) + float.Epsilon));
+
+
                 pivotAngle = Mathf.Clamp(pivotAngle, minimumPivot, maximumPivot);
+
+                
+
                 Vector3 rotation = Vector3.zero;
                 rotation.x = pivotAngle;
 
@@ -132,11 +136,14 @@ namespace SG {
             if (spherecastValue) {
                 float dis = Vector3.Distance(cameraPivotTransform.position, hit.point);
                 targetPosition = -(dis - cameraCollisionOffset);
+
+                if (Mathf.Abs(targetPosition) < minimumCollisionOffset)
+                {
+                    targetPosition = -minimumCollisionOffset;
+                }
             }
 
-            if (Mathf.Abs(targetPosition) < minimumCollisionOffset) {
-                targetPosition = -minimumCollisionOffset;
-            }
+            
 
             cameraTransformPosition.z = Mathf.Lerp(cameraTransform.localPosition.z, targetPosition, delta / 0.2f);
             cameraTransform.localPosition = cameraTransformPosition;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class ResetAnimatorBool : StateMachineBehaviour
 {
     public string targetBool;
-    public bool status;
+    public bool status = false;
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {

@@ -20,6 +20,7 @@ namespace SG {
         public BoxCollider hatCollider;
 
         public CapsuleCollider bodyCollider;
+        public Rigidbody rigid;
 
         // these attributes are the stats of the player
         public int healthPoints = 10;
@@ -41,11 +42,14 @@ namespace SG {
 
         public CameraHandler cameraHandler;
 
+        public bool isTakingDamage = false;
+
         void Start()
         {
             inputHandler = GetComponent<InputHandlerModified>();
             anim = GetComponentInChildren<Animator>();
             animationH = GetComponent<AnimationHandler>();
+            rigid = GetComponent<Rigidbody>();
             maxHealth = SetMaxHealthFromHealthPoints();
             healthBar.SetMaxHealth(maxHealth);
             currentHealth = maxHealth;
@@ -58,6 +62,7 @@ namespace SG {
             inputHandler.isInteracting = anim.GetBool("isinteracting");
             inputHandler.attackAfterRollFlag = anim.GetBool("rollAttack");
             inputHandler.rollFlag = false;
+            isTakingDamage = false;
         }
 
         private void FixedUpdate()
@@ -84,14 +89,18 @@ namespace SG {
         public void TakeDamage(int damage) {
             currentHealth = currentHealth - damage;
             healthBar.SetCurrentHealth(currentHealth);
-            
+            isTakingDamage = true;
+
+
             if (currentHealth <= 0) {
 
-                animationH.PlayTargetAnimation("damage_3", true);
-                currentHealth = maxHealth;
+                
+                currentHealth = 0;
                 healthBar.SetCurrentHealth(currentHealth);
             } else {
-                animationH.PlayTargetAnimation("damage_1", true);
+                //if (anim.GetBool("isinteracting")) return;
+
+                //animationH.PlayTargetAnimation("damage_1", true);
                 
             }
         }
@@ -120,11 +129,13 @@ namespace SG {
         public void EnableBodyCollider()
         {
             bodyCollider.enabled = true;
+           
         }
 
         public void DisableBodyCollider()
         {
             bodyCollider.enabled = false;
+            
         }
     }
 
