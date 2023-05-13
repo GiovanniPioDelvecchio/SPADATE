@@ -19,7 +19,7 @@ namespace SG {
         public BoxCollider leftHandCollider;
         public BoxCollider hatCollider;
 
-        public CapsuleCollider bodyCollider;
+        public BoxCollider bodyCollider;
         public Rigidbody rigid;
 
         // these attributes are the stats of the player
@@ -44,6 +44,18 @@ namespace SG {
 
         public bool isTakingDamage = false;
 
+        public GameObject menuObject;
+        public MainMenu menu;
+
+        public float deathTime = -1.0f;
+
+        public float endGameTimer = 3.0f;
+
+        public void getMainMenuObject() {
+            menuObject = GameObject.Find("PlayerInputManagerHolder");
+            menu = menuObject.GetComponent<MainMenu>();
+        }
+
         void Start()
         {
             inputHandler = GetComponent<InputHandlerModified>();
@@ -54,6 +66,7 @@ namespace SG {
             healthBar.SetMaxHealth(maxHealth);
             currentHealth = maxHealth;
             damage = damageObject.damage;
+            getMainMenuObject();
         }
 
         // Update is called once per frame
@@ -63,6 +76,10 @@ namespace SG {
             inputHandler.attackAfterRollFlag = anim.GetBool("rollAttack");
             inputHandler.rollFlag = false;
             isTakingDamage = false;
+
+            if (menuObject == null) {
+                getMainMenuObject();
+            }
         }
 
         private void FixedUpdate()
@@ -73,6 +90,9 @@ namespace SG {
             {
                 cameraHandler.FollowTarget(delta);
                 cameraHandler.HandleCameraRotation(delta, inputHandler.mouseX, inputHandler.mouseY, inputHandler.cameraLockFlag);
+            }
+            if (deathTime > 0 && Time.time - deathTime >= endGameTimer) {
+                menu.goToFirst();
             }
         }
 
@@ -97,6 +117,7 @@ namespace SG {
                 
                 currentHealth = 0;
                 healthBar.SetCurrentHealth(currentHealth);
+                deathTime = Time.time;
             } else {
                 //if (anim.GetBool("isinteracting")) return;
 
