@@ -16,8 +16,8 @@ namespace SG {
 
         private void Start()
         {
-            Debug.Log(getColorP1());
-            Debug.Log(getColorP2());
+            //Debug.Log(getColorP1());
+            //Debug.Log(getColorP2());
         }
 
         public int getColorP1() {
@@ -50,13 +50,15 @@ namespace SG {
 
         public void vesselStage() {
             previousScene = 2;
-            SceneManager.LoadScene("Vessel Stage");
+            //SceneManager.LoadScene("Vessel Stage");
+            SceneManager.LoadScene(4);
         }
 
         public void pondStage()
         {
             previousScene = 2;
-            SceneManager.LoadScene("Pond Stage");
+            //SceneManager.LoadScene("Pond Stage");
+            SceneManager.LoadScene(3);
         }
 
         public void quitGame() {

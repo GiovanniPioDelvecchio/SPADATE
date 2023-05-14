@@ -127,7 +127,7 @@ namespace SG {
         }
 
         public void setTo1HP() {
-            currentHealth = 1;
+            currentHealth = (int)(currentHealth * 20f / 100f);
             healthBar.SetCurrentHealth(currentHealth);
         }
 

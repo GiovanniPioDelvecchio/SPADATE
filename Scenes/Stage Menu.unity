@@ -209,7 +209,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1922606167}
         m_TargetAssemblyTypeName: SG.MainMenu, Assembly-CSharp
-        m_MethodName: pondStage
+        m_MethodName: vesselStage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1431,8 +1431,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   previousScene: 0
-  colorPlayer1: 0
-  colorPlayer2: 1
 --- !u!114 &1922606168
 MonoBehaviour:
   m_ObjectHideFlags: 0
